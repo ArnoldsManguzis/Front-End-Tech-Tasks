@@ -1,10 +1,13 @@
 import React from "react";
-import Header from "../components/Header";
+import data from "../data/data.json";
+import Documents from "../components/Documents";
 
 const JuniorMid = () => {
     return (
         <div className="flex">
-            <Header />
+            <div className="flex flex-col w-2/4">
+                <Documents style="flex flex-col" documents={data} />
+            </div>
         </div>
     );
 };
