@@ -3,22 +3,38 @@ import React from "react";
 type Document = {
     type: string;
     name: string;
-    added?: string;
-    size?: number;
+    added: string;
+    size: number;
     files?: Document[];
 };
 interface DocumentsProps {
     documents: Document[];
     style?: string;
     border?: string;
+    sortBy?: "name" | "added" | "size";
 }
 
-const Documents = ({ documents, style, border }: DocumentsProps) => {
+const sortDocuments = (documents: Document[], sortBy?: string) => {
+    if (sortBy === "name") {
+        return documents.sort((a, b) => a.name.localeCompare(b.name));
+    }
+    if (sortBy === "added") {
+        return documents.sort(
+            (a, b) => new Date(a.added).getTime() - new Date(b.added).getTime()
+        );
+    }
+    if (sortBy === "size") {
+        return documents.sort((a, b) => a.size - b.size);
+    }
+    return documents;
+};
+
+const Documents = ({ documents, style, border, sortBy }: DocumentsProps) => {
     const [open, setOpen] = React.useState<string[]>([]);
 
     return (
         <div className={style}>
-            {documents.map((document, index) => {
+            {sortDocuments(documents, sortBy).map((document, index) => {
                 const isFolder = document.type === "folder";
                 if (isFolder) {
                 }
