@@ -15,7 +15,7 @@ interface DocumentsProps {
     filter?: string;
 }
 
-const sortDocuments = (
+export const sortDocuments = (
     documents: Document[],
     sortBy?: string,
     filter?: string
