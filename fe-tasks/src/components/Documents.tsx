@@ -12,29 +12,48 @@ interface DocumentsProps {
     style?: string;
     border?: string;
     sortBy?: "name" | "added" | "size";
+    filter?: string;
 }
 
-const sortDocuments = (documents: Document[], sortBy?: string) => {
+const sortDocuments = (
+    documents: Document[],
+    sortBy?: string,
+    filter?: string
+) => {
+    const newDocuments = documents;
     if (sortBy === "name") {
-        return documents.sort((a, b) => a.name.localeCompare(b.name));
+        newDocuments.sort((a, b) => a.name.localeCompare(b.name));
     }
     if (sortBy === "added") {
-        return documents.sort(
+        newDocuments.sort(
             (a, b) => new Date(a.added).getTime() - new Date(b.added).getTime()
         );
     }
     if (sortBy === "size") {
-        return documents.sort((a, b) => a.size - b.size);
+        newDocuments.sort((a, b) => a.size - b.size);
     }
-    return documents;
+    console.log(filter);
+    if (filter && filter.length > 0) {
+        return newDocuments.filter((doc) =>
+            doc.name.toLowerCase().includes(filter.toLowerCase())
+        );
+    }
+    console.log(JSON.stringify(newDocuments, null, " "));
+    return newDocuments;
 };
 
-const Documents = ({ documents, style, border, sortBy }: DocumentsProps) => {
+const Documents = ({
+    documents,
+    style,
+    border,
+    sortBy,
+    filter,
+}: DocumentsProps) => {
     const [open, setOpen] = React.useState<string[]>([]);
 
     return (
         <div className={style}>
-            {sortDocuments(documents, sortBy).map((document, index) => {
+            {sortDocuments(documents, sortBy, filter).map((document, index) => {
                 const isFolder = document.type === "folder";
                 if (isFolder) {
                 }

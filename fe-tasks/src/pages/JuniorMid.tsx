@@ -6,9 +6,16 @@ const JuniorMid = () => {
     const [sortBy, setSortBy] = React.useState<"name" | "added" | "size">(
         "name"
     );
+    const [filter, setFilter] = React.useState<string>("");
     return (
         <div className="flex flex-col">
             <div className="flex flex-col w-2/4">
+                <input
+                    className="border border-slate-300 p-2 rounded-md mt-8 ml-8 "
+                    type="text"
+                    placeholder="Search"
+                    onChange={(e) => setFilter(e.target.value)}
+                ></input>
                 <div className="flex flex-row ml-8 mt-8 justify-between">
                     <button
                         onClick={() => setSortBy("name")}
@@ -45,6 +52,7 @@ const JuniorMid = () => {
                     style="flex flex-col"
                     documents={data}
                     sortBy={sortBy}
+                    filter={filter}
                 />
             </div>
         </div>
