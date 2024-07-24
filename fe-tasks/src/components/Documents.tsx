@@ -67,7 +67,12 @@ const Documents = ({ documents, style, border, sortBy }: DocumentsProps) => {
                                             : " border-2"
                                     } border-slate-100 rounded-md p-4 items-start text-center align-middle  justify-between w-full text-center inline-flex items-center`}
                                 >
-                                    <div>{document.name}</div>
+                                    <div className="flex flex-col items-start">
+                                        <div>{document.name}</div>
+                                        <div>{document.added}</div>
+                                        <div>{document.type}</div>
+                                        <div>{document.size} mb</div>
+                                    </div>
                                     {open.includes(document.name) ? (
                                         <svg
                                             className="h-5 w-5 text-black"
