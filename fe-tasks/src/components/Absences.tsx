@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { addDays } from "../helpers";
+import { addDays, typeToReadable } from "../helpers";
 
 interface Absence {
     id: number;
@@ -38,16 +38,16 @@ const Absences = () => {
 
     if (error) return <div>Something went wrong</div>;
     return (
-        <div>
+        <div className="w-2/4">
             {data.map((absence) => {
                 return (
                     <div
                         key={absence.id}
                         className={`flex flex-row text-left  border-2 ${
                             absence.conflict
-                                ? "border-orange-300"
+                                ? "border-red-500"
                                 : "border-slate-300"
-                        } rounded-md my-8 ml-8 p-4`}
+                        } rounded-md my-8 ml-8 p-4 justify-between items-center`}
                     >
                         <div>
                             {absence.employee.firstName}{" "}
@@ -66,7 +66,18 @@ const Absences = () => {
                                 ).toLocaleDateString("en-gb")}
                             </div>
                         </div>
-                        <div></div>
+                        <div className="flex flex-col items-end ">
+                            {typeToReadable(absence.absenceType)}
+                            <div
+                                className={`${
+                                    absence.approved
+                                        ? "text-green-500"
+                                        : "text-orange-500"
+                                }`}
+                            >
+                                {absence.approved ? "Approved" : "Pending"}
+                            </div>
+                        </div>
                     </div>
                 );
             })}
