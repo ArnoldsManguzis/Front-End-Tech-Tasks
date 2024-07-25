@@ -38,7 +38,7 @@ const Absences = () => {
 
     if (error) return <div>Something went wrong</div>;
     return (
-        <div className="w-2/4">
+        <div>
             {data.map((absence) => {
                 return (
                     <div
@@ -66,7 +66,7 @@ const Absences = () => {
                                 ).toLocaleDateString("en-gb")}
                             </div>
                         </div>
-                        <div className="flex flex-col items-end ">
+                        <div className="flex flex-col items-end ml-4 ">
                             {typeToReadable(absence.absenceType)}
                             <div
                                 className={`${
