@@ -5,7 +5,7 @@ interface Absence {
     id: number;
     startDate: string;
     days: number;
-    absenceType: string;
+    absenceType: "SICKNESS" | "ANNUAL_LEAVE" | "MEDICAL";
     employee: {
         firstName: string;
         lastName: string;
@@ -34,7 +34,7 @@ const Absences = () => {
         };
 
         fetchData();
-    });
+    }, []);
 
     if (error) return <div>Something went wrong</div>;
     return (
@@ -43,13 +43,15 @@ const Absences = () => {
                 return (
                     <div
                         key={absence.id}
-                        className={`flex flex-col text-left  border-2 ${
+                        className={`flex flex-row text-left  border-2 ${
                             absence.conflict
                                 ? "border-orange-300"
                                 : "border-slate-300"
                         } rounded-md my-8 ml-8 p-4`}
                     >
                         <div>
+                            {absence.employee.firstName}{" "}
+                            {absence.employee.lastName}
                             <div>
                                 from:{" "}
                                 {new Date(absence.startDate).toLocaleDateString(
@@ -63,9 +65,8 @@ const Absences = () => {
                                     absence.days
                                 ).toLocaleDateString("en-gb")}
                             </div>
-                            {absence.employee.firstName}{" "}
-                            {absence.employee.lastName}
                         </div>
+                        <div></div>
                     </div>
                 );
             })}
