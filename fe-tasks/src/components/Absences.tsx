@@ -21,12 +21,25 @@ const Absences = () => {
 
     useEffect(() => {
         const url = "https://front-end-kata.brighthr.workers.dev/api/absences";
+        const urlConflicts =
+            "https://front-end-kata.brighthr.workers.dev/api/conflict/";
 
         const fetchData = async () => {
             try {
                 const response = await fetch(url);
                 const json: Absence[] = await response.json();
-                setData(json);
+
+                const dataWithConflicts: Absence[] = await Promise.all(
+                    json.map(async (absence, index) => {
+                        const response = await fetch(urlConflicts + absence.id);
+                        const conflict: {
+                            conflicts: boolean;
+                        } = await response.json();
+                        json[index].conflict = conflict.conflicts;
+                    })
+                ).then(() => json);
+
+                setData(dataWithConflicts);
             } catch (error) {
                 setError(true);
                 console.log("error", error);
