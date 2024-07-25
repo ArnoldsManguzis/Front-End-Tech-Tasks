@@ -4,6 +4,7 @@ import { addDays, typeToReadable } from "../helpers";
 interface Absence {
     id: number;
     startDate: string;
+    endDate: string;
     days: number;
     absenceType: "SICKNESS" | "ANNUAL_LEAVE" | "MEDICAL";
     employee: {
@@ -15,7 +16,34 @@ interface Absence {
     conflict?: boolean;
 }
 
-const Absences = () => {
+type AbsencesProps = {
+    sortBy?: "startDate" | "endDate" | "absenceType" | "name";
+};
+
+const sortData = (data: Absence[], sortBy: AbsencesProps["sortBy"]) => {
+    return data.sort((a, b) => {
+        if (sortBy === "startDate") {
+            return (
+                new Date(a.startDate).getTime() -
+                new Date(b.startDate).getTime()
+            );
+        }
+        if (sortBy === "endDate") {
+            return (
+                new Date(a.endDate).getTime() - new Date(b.endDate).getTime()
+            );
+        }
+        if (sortBy === "absenceType") {
+            return a.absenceType.localeCompare(b.absenceType);
+        }
+        if (sortBy === "name") {
+            return a.employee.firstName.localeCompare(b.employee.firstName);
+        }
+        return 0;
+    });
+};
+
+const Absences = ({ sortBy }: AbsencesProps) => {
     const [data, setData] = useState<Absence[]>([]);
     const [error, setError] = useState(false);
 
@@ -36,6 +64,10 @@ const Absences = () => {
                             conflicts: boolean;
                         } = await response.json();
                         json[index].conflict = conflict.conflicts;
+                        json[index].endDate = addDays(
+                            new Date(absence.startDate),
+                            absence.days
+                        ).toLocaleDateString("en-gb");
                     })
                 ).then(() => json);
 
@@ -52,7 +84,7 @@ const Absences = () => {
     if (error) return <div>Something went wrong</div>;
     return (
         <div>
-            {data.map((absence) => {
+            {sortData(data, sortBy).map((absence) => {
                 return (
                     <div
                         key={absence.id}
@@ -60,7 +92,7 @@ const Absences = () => {
                             absence.conflict
                                 ? "border-red-500"
                                 : "border-slate-300"
-                        } rounded-md my-8 ml-8 p-4 justify-between items-center`}
+                        } rounded-md my-8 mx-8 p-4 justify-between items-center`}
                     >
                         <div>
                             {absence.employee.firstName}{" "}
@@ -71,13 +103,7 @@ const Absences = () => {
                                     "en-gb"
                                 )}
                             </div>
-                            <div>
-                                to:{" "}
-                                {addDays(
-                                    new Date(absence.startDate),
-                                    absence.days
-                                ).toLocaleDateString("en-gb")}
-                            </div>
+                            <div>to: {absence.endDate}</div>
                         </div>
                         <div className="flex flex-col items-end ml-4 ">
                             {typeToReadable(absence.absenceType)}
